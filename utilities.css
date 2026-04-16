@@ -1,0 +1,87 @@
+/* ================== TEXT & TYPOGRAPHY ================== */
+.text-xl { font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
+.text-md { font-size: 1.1rem; font-weight: 600; }
+.text-sm { font-size: 0.85rem; opacity: 0.7; }
+.uppercase { text-transform: uppercase; letter-spacing: 1.5px; }
+.text-primary { color: var(--primary-color); }
+.fw-bold { font-weight: 800; }
+.italic { font-style: italic; }
+
+/* ================== SPACING & LAYOUT ================== */
+.mb-1 { margin-bottom: 12px; }
+.mb-2 { margin-bottom: 24px; }
+.mt-1 { margin-top: 12px; }
+.mt-2 { margin-top: 24px; }
+.py-1 { padding: 15px 0; }
+.p-1 { padding: 15px; }
+.pt-1 { padding-top: 15px; }
+
+/* Default border for light mode */
+.border-top { border-top: 1px solid rgba(0, 0, 0, 0.08); }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ================== VISIBILITY & STATE ================== */
+.hidden { display: none !important; }
+.opacity-50 { opacity: 0.5; }
+
+/* ================== XP & PROGRESS SYSTEM ================== */
+.progress-bar-bg {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.1); /* Darker background for light mode */
+  height: 8px;
+  border-radius: 10px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+#bar-40 {
+  width: 0%; 
+  background: var(--primary-color);
+  height: 100%;
+  box-shadow: 0 0 10px var(--primary-color);
+  transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.xp-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.xp-bar {
+    width: 0%; 
+    height: 100%;
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    transition: width 0.8s ease-in-out;
+}
+
+/* ================== TEXT GLOW HITS ================== */
+.glow-text {
+    text-shadow: 0 0 15px rgba(72, 145, 255, 0.5);
+}
+
+/* ================== UTILITY CARDS ================== */
+.bg-black { background: #000 !important; }
+.bg-dark { background: #111 !important; }
+.text-center { text-align: center; }

@@ -1,0 +1,197 @@
+/* ================== GLOBAL RESET & VARIABLES ================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --primary-color: #4891ff;
+    --light-color: #f4f4f6;
+    --dark-color: #0a0a0a;
+    --text-color: #331;
+    --transition-speed: 0.3s;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-color);
+    color: var(--text-color);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ================== APP SHELL ================== */
+.app-header {
+    padding: 15px 20px;
+    background: var(--light-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    z-index: 100;
+}
+
+#app-viewport {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    padding-bottom: 120px; 
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: var(--light-color);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    z-index: 100;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    color: #888;
+    cursor: pointer;
+}
+
+/* ================== CARDS & FOCUS ================== */
+.card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    border: 1px solid transparent;
+}
+
+.focus-card {
+    background: linear-gradient(135deg, var(--primary-color), #1e3c72);
+    color: white;
+    padding: 25px;
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 30px rgba(72, 145, 255, 0.3);
+}
+
+/* ================== THE "HEAT" LAB TOOLS ================== */
+#user-limit {
+    background: rgba(0, 0, 0, 0.05);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    color: var(--primary-color);
+    font-size: 1.4rem; 
+    font-weight: 800;
+    text-align: center;
+    padding: 12px; 
+    margin: 15px 0;
+    width: 100%;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#user-limit:focus {
+    border-color: var(--primary-color);
+    background: #fff;
+    box-shadow: 0 0 20px rgba(72, 145, 255, 0.1);
+}
+
+.btn-diagnostic {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary-color), #1e3c72);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 900;
+    padding: 15px;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    border-radius: 15px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(72, 145, 255, 0.4), 
+                inset 0 2px 2px rgba(255, 255, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-diagnostic::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 25%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: rotate(30deg);
+    filter: blur(5px);
+    transition: 0s;
+}
+
+.btn-diagnostic:hover::after {
+    left: 125%;
+    transition: all 0.6s ease-in-out;
+}
+
+.btn-diagnostic:active {
+    transform: scale(0.94) translateY(4px);
+}
+
+/* ================== RULES SECTION ================== */
+#view-philosophy .card {
+    border-left: 4px solid var(--primary-color);
+}
+
+/* ================== DARK MODE OVERRIDES ================== */
+body.dark-mode {
+    --light-color: #000;
+    --text-color: #eee;
+}
+
+body.dark-mode .app-header, 
+body.dark-mode .bottom-nav { 
+    background: #000; 
+    border-color: #222; 
+}
+
+body.dark-mode .card { 
+    background: #111; 
+    border-color: #222; 
+}
+
+body.dark-mode .border-top {
+    border-top-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode #user-limit {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #333;
+}
+
+/* ================== COMPONENT UTILS ================== */
+.task-item {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding: 15px 0; 
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+body.dark-mode .task-item {
+    border-bottom-color: rgba(255,255,255,0.05);
+}
+
+.strikethrough {
+    text-decoration: line-through;
+    opacity: 0.4;
+    color: var(--primary-color);
+}
