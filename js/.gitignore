@@ -1,0 +1,12 @@
+# Dependencies
+node_modules/
+
+# Environment Variables (Sensitive Keys)
+.env
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/

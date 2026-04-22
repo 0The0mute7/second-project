@@ -21,8 +21,8 @@ const supabase = createClient(
 const mustGetData = async (query, fallbackMessage) => {
     const { data, error } = await query;
 
-    if (error) {
-        throw new Error(error.message || fallbackMessage);
+    if (error || !data) {
+        throw new Error(error?.message || fallbackMessage);
     }
 
     return data;

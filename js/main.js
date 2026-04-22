@@ -143,13 +143,12 @@ function showView(viewId) {
     const navItems = document.querySelectorAll('.nav-item');
     navItems.forEach(item => {
         item.classList.remove('active');
-        item.style.color = "#888";
     });
 
-    const activeNav = Array.from(navItems).find(item => 
-        item.getAttribute('onclick').includes(viewId)
+    const activeNav = Array.from(navItems).find(item =>
+        item.dataset.view === viewId
     );
-    if (activeNav) activeNav.style.color = "var(--primary-color)";
+    if (activeNav) activeNav.classList.add('active');
 
     // Initialize view-specific data
     switch (viewId) {
@@ -244,8 +243,12 @@ function updatePosition(position) {
     // Calculate Distance
     if (lastCoords) {
         const dist = calculateDistance(lastCoords.latitude, lastCoords.longitude, latitude, longitude);
-        totalDistance += dist;
-        document.getElementById('live-distance').innerText = totalDistance.toFixed(2);
+        // Sanity check: Ignore jumps larger than 5km (usually GPS glitch or testing teleport)
+        if (dist < 5) {
+            totalDistance += dist;
+            console.log(`Distance Updated: ${totalDistance.toFixed(2)} KM`);
+            document.getElementById('live-distance').innerText = totalDistance.toFixed(2);
+        }
     }
     lastCoords = { latitude, longitude };
 }
@@ -262,10 +265,19 @@ function updateTimer() {
 }
 
 function updatePace(elapsedMs) {
-    if (totalDistance > 0 && elapsedMs > 0) {
+    // Condition to calculate pace: at least 5 meters and 1 second
+    if (totalDistance > 0.005 && elapsedMs > 1000) {
         const paceSecondsPerKm = Math.floor((elapsedMs / 1000) / totalDistance);
+        
+        // Handle "teleporting" in tests (moving faster than 1s per KM)
+        if (paceSecondsPerKm < 1) {
+            document.getElementById('live-pace').innerText = "0:00";
+            return;
+        }
+
         const paceMin = Math.floor(paceSecondsPerKm / 60);
         const paceSec = paceSecondsPerKm % 60;
+        console.log(`[updatePace] Pace Calculated: ${paceMin}:${paceSec.toString().padStart(2, '0')}`);
         document.getElementById('live-pace').innerText = 
             `${paceMin.toString().padStart(2, '0')}:${paceSec.toString().padStart(2, '0')}`;
     } else {
@@ -284,8 +296,9 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 }
 
 function handleGPSError(err) {
-    console.warn(`ERROR(${err.code}): ${err.message}`);
-    document.getElementById('gps-status').innerText = "GPS: ERROR";
+    const errorMsgs = { 1: "PERMISSION DENIED", 2: "SIGNAL LOST", 3: "TIMEOUT" };
+    console.warn(`GPS ERROR(${err.code}): ${err.message}`);
+    document.getElementById('gps-status').innerText = `GPS: ${errorMsgs[err.code] || 'ERROR'}`;
 }
 
 // --- 6. PROFILE PAGE & STATS ---
@@ -298,7 +311,7 @@ async function loadProfilePage() {
     document.getElementById('profile-email').textContent = currentUser.email;
 
     const result = await api.getActivities();
-    const activities = result.success ? result.activities : [];
+    const activities = (result.success && Array.isArray(result.activities)) ? result.activities : [];
 
     const totalDist = activities.reduce((sum, a) => sum + parseFloat(a.distance), 0);
     const totalTime = activities.reduce((sum, a) => {
@@ -451,26 +464,28 @@ function initAppFeatures() {
 // --- 10. FRIEND SYSTEM ---
 
 async function initFriendSearch() {
-    const searchInput = document.getElementById('friend-search');
-    if (!searchInput) return;
+    const friendSearch = document.getElementById('friend-search');
+    const feedSearch = document.getElementById('search-users');
     
-    searchInput.addEventListener('input', async (e) => {
+    const handleSearch = async (e, resultsId) => {
         const query = e.target.value.trim().toLowerCase();
+        const resultsDiv = document.getElementById(resultsId);
+        
         if (query.length < 2) {
-            document.getElementById('search-results').style.display = 'none';
+            resultsDiv.style.display = 'none';
             return;
         }
         
         const result = await api.searchUsers(query);
-        const results = result.success ? result.users : [];
+        const results = (result && result.success && Array.isArray(result.users)) ? result.users : [];
 
-        const resultsDiv = document.getElementById('search-results');
-        if (results.length === 0) {
+        if (!results || results.length === 0) {
             resultsDiv.innerHTML = '<p class="text-xs opacity-50">No users found</p>';
         } else {
             // Get current friends to show 'ADDED' status
             const friendsResult = await api.getFriends();
-            const currentFriends = friendsResult.success ? friendsResult.friends.map(f => f.username) : [];
+            const friendsData = (friendsResult?.success && Array.isArray(friendsResult?.friends)) ? friendsResult.friends : [];
+            const currentFriends = friendsData ? friendsData.map(f => f.username) : [];
 
             resultsDiv.innerHTML = results.map(user => {
                 const username = user.username;
@@ -491,7 +506,10 @@ async function initFriendSearch() {
             }).join('');
         }
         resultsDiv.style.display = 'block';
-    });
+    };
+
+    friendSearch?.addEventListener('input', (e) => handleSearch(e, 'search-results'));
+    feedSearch?.addEventListener('input', (e) => handleSearch(e, 'feed-search-results'));
 }
 
 async function addFriend(friendUsername) {
@@ -519,7 +537,7 @@ async function loadFriendsUI() {
     if (!currentUser) return;
     
     const result = await api.getFriends();
-    const friends = result.success ? result.friends : [];
+    const friends = (result.success && Array.isArray(result.friends)) ? result.friends : [];
     const friendsContent = document.getElementById('friends-content');
 
     if (friends.length === 0) {
@@ -588,7 +606,7 @@ async function loadMessages() {
     if (!selectedConversation || !currentUser) return;
     
     const result = await api.getConversation(selectedConversation);
-    const messages = result.success ? result.messages : [];
+    const messages = (result.success && Array.isArray(result.messages)) ? result.messages : [];
     const chatMessagesDiv = document.getElementById('chat-messages');
 
     if (messages.length === 0) {
@@ -618,7 +636,7 @@ async function loadConversationsList() {
     if (!currentUser) return;
     
     const result = await api.getConversations();
-    const conversations = result.success ? result.conversations : [];
+    const conversations = (result.success && Array.isArray(result.conversations)) ? result.conversations : [];
     const conversationsList = document.getElementById('conversations-list');
 
     if (conversations.length === 0) {
@@ -653,7 +671,7 @@ async function loadSocialFeed() {
     if (!currentUser) return;
     
     const result = await api.getSocialFeed();
-    const allActivities = result.success ? result.activities : [];
+    const allActivities = (result.success && Array.isArray(result.activities)) ? result.activities : [];
     const feedContent = document.getElementById('feed-content');
 
     if (allActivities.length === 0) {
@@ -734,7 +752,7 @@ async function loadRunHistory() {
     if (!currentUser) return;
     
     const result = await api.getActivities(10);
-    const activities = result.success ? result.activities : [];
+    const activities = (result.success && Array.isArray(result.activities)) ? result.activities : [];
     const historyEl = document.getElementById('runs-history');
 
     if (activities.length === 0) {

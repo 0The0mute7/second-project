@@ -17,7 +17,7 @@ router.post('/register', async (req, res) => {
         const normalizedUsername = username.trim().toLowerCase();
         const normalizedEmail = email.trim().toLowerCase();
 
-        const existingUser = await maybeSingle(
+        const existingUsers = await mustGetData(
             supabase
                 .from('users')
                 .select('id, username, email')
@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
             'Failed to check existing user'
         );
 
-        if (existingUser) {
+        if (existingUsers && existingUsers.length > 0) {
             return res.status(400).json({ error: 'Username or email already exists' });
         }
 
@@ -42,7 +42,12 @@ router.post('/register', async (req, res) => {
                 .select('*'),
             'Failed to create user'
         );
+
         const user = insertedUsers[0];
+
+        if (!user) {
+            throw new Error('User was created but could not be retrieved from the database.');
+        }
 
         const token = jwt.sign(
             { userId: user.id, username: user.username },
