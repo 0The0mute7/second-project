@@ -15,9 +15,26 @@ let alarmInterval = null;
 
 document.addEventListener("DOMContentLoaded", function () {
     initTheme();
+    bindUIActions();
     checkUserSession();
     document.getElementById('logout-btn').addEventListener('click', handleLogout);
 });
+
+function bindUIActions() {
+    document.getElementById('login-submit')?.addEventListener('click', handleLogin);
+    document.getElementById('show-register')?.addEventListener('click', () => showView('register'));
+    document.getElementById('register-submit')?.addEventListener('click', handleRegister);
+    document.getElementById('show-login')?.addEventListener('click', () => showView('login'));
+
+    document.querySelectorAll('.nav-item[data-view]').forEach((item) => {
+        item.addEventListener('click', () => {
+            const view = item.dataset.view;
+            if (view) {
+                showView(view);
+            }
+        });
+    });
+}
 
 async function checkUserSession() {
     // Check if we have a token from api.js logic
