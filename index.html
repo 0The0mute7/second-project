@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BEYOND 40% | UNBREAKABLE</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>BEYOND 40% | UNBREAKABLE</title>
 
-  <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="utilities.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
-  <link rel="shortcut icon" href="Images/beyond40-logo.png">
-  <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4891ff">
-<meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="utilities.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+    <link rel="shortcut icon" href="Images/beyond40-logo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4891ff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 
 <body>
@@ -21,127 +22,357 @@
             <img src="beyond40-logo.png" alt="BEYOND 40" style="height: 30px;">
             <span>BEYOND <span class="text-primary">40%</span></span>
         </div>
-        <button id="theme-toggle" class="btn-toggle">
-            <i class="fas fa-moon"></i>
-        </button>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span id="user-display" class="text-sm" style="display: none;"></span>
+            <button id="logout-btn" class="text-xs fw-bold" style="background: none; border: none; color: var(--primary-color); cursor: pointer; display: none;">LOGOUT</button>
+            <button id="theme-toggle" class="btn-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
     </header>
 
     <main id="app-viewport">
         
-        <section id="view-dashboard" class="app-view">
+        <!-- AUTH VIEWS -->
+        <section id="view-login" class="app-view">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; padding: 20px;">
+                <div class="card bg-black" style="width: 100%; max-width: 400px;">
+                    <h2 class="text-xl text-center mb-2 glow-text">BEYOND 40%</h2>
+                    <p class="text-sm text-center opacity-50 mb-2">The Elite Fitness Network</p>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label class="text-sm uppercase opacity-50">Username</label>
+                        <input type="text" id="login-username" placeholder="Enter username" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label class="text-sm uppercase opacity-50">Password</label>
+                        <input type="password" id="login-password" placeholder="Enter password" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <button onclick="handleLogin()" class="btn-diagnostic" style="width: 100%; height: 50px; background: var(--primary-color); color: white; font-weight: bold; margin-bottom: 12px;">
+                        LOGIN
+                    </button>
+                    
+                    <button onclick="showView('register')" class="btn-diagnostic" style="width: 100%; height: 50px; background: #333; color: white; font-weight: bold;">
+                        CREATE ACCOUNT
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="view-register" class="app-view hidden">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px;">
+                <div class="card bg-black" style="width: 100%; max-width: 400px;">
+                    <h2 class="text-xl text-center mb-2 glow-text">JOIN THE MOVEMENT</h2>
+                    <p class="text-sm text-center opacity-50 mb-2">Sign up to track your fitness</p>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label class="text-sm uppercase opacity-50">Username</label>
+                        <input type="text" id="register-username" placeholder="Choose username" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label class="text-sm uppercase opacity-50">Email</label>
+                        <input type="email" id="register-email" placeholder="your@email.com" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label class="text-sm uppercase opacity-50">Password</label>
+                        <input type="password" id="register-password" placeholder="Strong password" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label class="text-sm uppercase opacity-50">Full Name</label>
+                        <input type="text" id="register-name" placeholder="Your name" style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white; margin-top: 5px;" />
+                    </div>
+                    
+                    <button onclick="handleRegister()" class="btn-diagnostic" style="width: 100%; height: 50px; background: var(--primary-color); color: white; font-weight: bold; margin-bottom: 12px;">
+                        REGISTER
+                    </button>
+                    
+                    <button onclick="showView('login')" class="btn-diagnostic" style="width: 100%; height: 50px; background: #333; color: white; font-weight: bold;">
+                        BACK TO LOGIN
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- MAIN APP VIEWS -->
+        <section id="view-dashboard" class="app-view hidden">
             <div class="focus-card mb-2">
                 <div class="focus-content">
-                    <span class="uppercase text-sm fw-bold" style="opacity: 0.8;">Today's Objective</span>
-                    <h2 class="text-xl">Embrace The Suck</h2>
-                    <p class="text-sm">Growth lives in the 60% your brain wants to skip.</p>
+                    <span class="uppercase text-sm fw-bold" style="opacity: 0.8;">Current Status</span>
+                    <h2 class="text-xl">War Ready</h2>
+                    <p class="text-sm">Don't negotiate with your inner critic.</p>
                 </div>
                 <div class="focus-icon">
-                    <i class="fas fa-bolt"></i>
+                    <i class="fas fa-fire-alt"></i>
                 </div>
             </div>
 
             <div class="grid mb-2">
                 <div class="card bg-dark">
-                    <span class="text-sm uppercase opacity-50">Level 1</span>
-                    <p class="text-md text-primary fw-bold">Unbreakable</p>
-                    <div class="xp-container"><div id="level-xp" class="xp-bar" style="width: 65%;"></div></div>
+                    <span class="text-sm uppercase opacity-50">Stamina</span>
+                    <p class="text-md text-primary fw-bold">LVL 01</p>
+                    <div class="xp-container"><div class="xp-bar" style="width: 40%;"></div></div>
                 </div>
                 <div class="card bg-dark">
-                    <span class="text-sm uppercase opacity-50">Rank</span>
-                    <p class="text-md text-primary fw-bold">Top 1%</p>
-                    <div class="xp-container"><div id="rank-xp" class="xp-bar" style="width: 92%;"></div></div>
+                    <span class="text-sm uppercase opacity-50">Streak</span>
+                    <p class="text-md text-primary fw-bold"><span id="streak-count">0</span> DAYS</p>
+                    <div class="xp-container"><div class="xp-bar" style="width: 10%;"></div></div>
                 </div>
             </div>
 
-            <div id="tracker" class="mb-2">
-                <div class="card bg-black">
-                    <h3 class="text-md uppercase mb-1"><i class="fas fa-tasks text-primary"></i> Non-Negotiables</h3>
-                    <ul id="checklist" class="checklist-items"></ul>
-                    <div class="mt-1 text-center border-top pt-1">
-                        <p>Streak: <span id="streak-count" class="text-primary fw-bold">0</span> Days</p>
-                    </div>
-                </div>
+            <div class="card bg-black mb-2">
+                <h3 class="text-md uppercase mb-1 text-primary"><i class="fas fa-list-check"></i> Today's Drills</h3>
+                <ul id="checklist" class="checklist-items">
+                    </ul>
             </div>
 
             <div class="card bg-dark text-center">
-                <i class="fas fa-quote-left text-primary mb-1"></i>
-                <p id="daily-quote" class="text-sm italic">Loading mindset...</p>
+                <p id="daily-quote" class="text-sm italic opacity-70">"Comfort is the enemy of progress."</p>
             </div>
         </section>
 
         <section id="view-train" class="app-view hidden">
-            <h2 class="text-xl mb-1">The Lab</h2>
-            <div class="card bg-dark" style="border-top: 4px solid var(--primary-color);">
-                <h3 class="text-md uppercase mb-1">Reality Check</h3>
-                <p class="text-sm mb-2 opacity-50">Enter your current limit (KM/Reps).</p>
-                
-                <input type="number" id="user-limit" placeholder="MAX EFFORT" />
-                
-                <button onclick="runDiagnostic()" class="btn-diagnostic">
-                    Run Diagnostic <i class="fas fa-microchip"></i>
-                </button>
+            <div class="flex-between mb-1">
+                <h2 class="text-xl">The Lab</h2>
+                <span id="gps-status" class="text-xs fw-bold" style="color: #666;">GPS: IDLE</span>
+            </div>
 
-                <div id="calculator-results" class="hidden mt-2">
-                    <div class="flex-between mb-1">
-                        <span class="text-sm uppercase opacity-50">Brain's Limit</span>
-                        <span id="brain-limit" class="text-md fw-bold">0</span>
+            <!-- SPORT SELECTION -->
+            <div class="card bg-dark mb-2">
+                <label class="text-sm uppercase opacity-50">Select Sport</label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <button onclick="selectSport('running')" id="sport-running" class="sport-btn" style="padding: 12px; background: #333; border: 2px solid transparent; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s;">
+                        <i class="fas fa-running"></i> Running
+                    </button>
+                    <button onclick="selectSport('cycling')" id="sport-cycling" class="sport-btn" style="padding: 12px; background: #333; border: 2px solid transparent; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s;">
+                        <i class="fas fa-biking"></i> Cycling
+                    </button>
+                    <button onclick="selectSport('swimming')" id="sport-swimming" class="sport-btn" style="padding: 12px; background: #333; border: 2px solid transparent; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s;">
+                        <i class="fas fa-swimmer"></i> Swimming
+                    </button>
+                    <button onclick="selectSport('walking')" id="sport-walking" class="sport-btn" style="padding: 12px; background: #333; border: 2px solid transparent; border-radius: 10px; color: white; cursor: pointer; transition: 0.3s;">
+                        <i class="fas fa-person-walking"></i> Walking
+                    </button>
+                </div>
+            </div>
+
+            <div class="card bg-black mb-2" style="border: 2px solid var(--primary-color); padding: 30px 15px;">
+                <div class="text-center mb-3">
+                    <span class="text-xs uppercase opacity-50 tracking-widest">Total Distance</span>
+                    <h1 id="live-distance" style="font-size: 5rem; font-weight: 800; line-height: 1; margin: 10px 0;">0.00</h1>
+                    <span class="text-md fw-bold text-primary">KILOMETERS</span>
+                </div>
+                
+                <div class="grid text-center border-top pt-2" style="grid-template-columns: 1fr 1fr 1fr;">
+                    <div style="border-right: 1px solid #333;">
+                        <h2 id="live-speed" class="text-xl">0.0</h2>
+                        <span class="text-xs uppercase opacity-50">Avg KM/H</span>
                     </div>
-                    <div class="progress-bar-bg"><div id="bar-40"></div></div>
-                    <div class="text-center mt-2">
-                        <span class="text-sm uppercase opacity-50">True Potential</span>
-                        <h4 id="true-limit" class="text-primary glow-text">0</h4>
+                    <div style="border-right: 1px solid #333;">
+                        <h2 id="live-pace" class="text-xl">--:--</h2>
+                        <span class="text-xs uppercase opacity-50">Min/KM</span>
                     </div>
+                    <div>
+                        <h2 id="live-timer" class="text-xl">00:00</h2>
+                        <span class="text-xs uppercase opacity-50">Duration</span>
+                    </div>
+                </div>
+            </div>
+
+            <button id="start-tracking" class="btn-diagnostic mb-2" style="background: var(--primary-color); color: white; height: 80px; font-size: 1.5rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(72,145,255,0.4);">
+                START SESSION <i class="fas fa-play ml-1"></i>
+            </button>
+
+            <div class="card bg-dark">
+                <h3 class="text-sm uppercase mb-1 opacity-50 text-center">Diagnostic Calculator</h3>
+                <div class="flex-between">
+                    <input type="number" id="user-limit" placeholder="ENTER MAX REPS/KM" style="width: 70%;" />
+                    <button onclick="runDiagnostic()" class="btn-diagnostic" style="width: 25%; margin: 0; padding: 10px;">
+                        <i class="fas fa-calculate"></i>
+                    </button>
+                </div>
+                <div id="calculator-results" class="hidden mt-2 text-center border-top pt-1">
+                    <span class="text-xs uppercase opacity-50">The 40% Wall is at: <span id="brain-limit" class="text-white fw-bold">0</span></span>
+                    <h2 class="text-primary mt-1">PUSH TO: <span id="true-limit">0</span></h2>
+                </div>
+            </div>
+
+            <div class="card bg-black mb-2">
+                <div class="flex-between mb-1">
+                    <h3 class="text-md uppercase text-primary"><i class="fas fa-history"></i> Recent Runs</h3>
+                    <button onclick="clearRunHistory()" class="text-xs" style="background: none; border: none; color: #666; cursor: pointer; padding: 0;">Clear</button>
+                </div>
+                <div id="runs-history" class="text-sm">
+                    <p class="opacity-50 text-center">No runs recorded yet. Start tracking!</p>
                 </div>
             </div>
         </section>
 
         <section id="view-vault" class="app-view hidden">
-            <h2 class="text-xl mb-1">Mindset Vault</h2>
+            <h2 class="text-xl mb-2">Training Vault</h2>
             
             <div class="card bg-dark mb-1">
                 <div class="flex-between">
                     <div>
-                        <h4 class="text-md text-primary">4:00 AM Protocol</h4>
-                        <p class="text-sm">Offline Wake-Up call.</p>
+                        <h4 class="text-md text-primary">0400 Protocol</h4>
+                        <p class="text-sm">Beat the sun.</p>
                     </div>
                     <input type="time" id="alarm-time" value="04:00" class="bg-black text-primary p-1" style="border: 1px solid #333; border-radius: 8px;">
                 </div>
-                <button onclick="setProtocolAlarm()" class="btn-diagnostic mt-1" style="padding: 10px; font-size: 0.7rem;">
-                    Lock Protocol <i class="fas fa-lock"></i>
+                <button onclick="setProtocolAlarm()" class="btn-diagnostic mt-1" style="padding: 10px; font-size: 0.7rem; background: #333;">
+                    SET ALARM <i class="fas fa-clock"></i>
                 </button>
             </div>
 
-            <div class="card bg-dark flex-between mb-1" onclick="window.open('https://open.spotify.com/playlist/37i9dQZF1DX5mSuiT9ax68', '_blank')" style="cursor: pointer;">
+            <div class="card bg-black flex-between mb-1" onclick="window.open('https://open.spotify.com/', '_blank')" style="cursor: pointer; border-left: 4px solid #1DB954;">
                 <div>
-                    <h4 class="text-md text-primary">Amapiano Discipline</h4>
-                    <p class="text-sm">High-tempo coding focus.</p>
+                    <h4 style="color: #1DB954;">Amapiano Focus</h4>
+                    <p class="text-sm opacity-50">Heavy bass, high volume.</p>
                 </div>
-                <div class="flex-center" style="background: #1DB954; width: 40px; height: 40px; border-radius: 50%;">
-                    <i class="fas fa-play text-white" style="font-size: 0.8rem;"></i>
-                </div>
+                <i class="fab fa-spotify" style="color: #1DB954; font-size: 1.5rem;"></i>
             </div>
         </section>
 
         <section id="view-philosophy" class="app-view hidden">
-            <h2 class="text-xl mb-2 glow-text">The Rules</h2>
+            <h2 class="text-xl mb-2 glow-text">The Code</h2>
             
             <div class="card bg-dark mb-1">
-                <h4 class="text-md text-primary uppercase">Rule #1: The 40% Governor</h4>
-                <p class="text-sm mt-1">When your brain says stop, you are only at 40% capacity. The 60% is your growth zone.</p>
+                <h4 class="text-primary uppercase">I. The 40% Rule</h4>
+                <p class="text-sm mt-1">When you think you're done, you're only at 40%. The rest is in your mind.</p>
             </div>
 
             <div class="card bg-dark mb-1">
-                <h4 class="text-md text-primary uppercase">Rule #2: Non-Negotiables</h4>
-                <p class="text-sm mt-1">Tasks are debts. Pay them daily. No excuses, no shortcuts.</p>
+                <h4 class="text-primary uppercase">II. Zero Negotiation</h4>
+                <p class="text-sm mt-1">The workout doesn't end when you're tired. It ends when the task is dead.</p>
             </div>
 
             <div class="card bg-dark mb-1">
-                <h4 class="text-md text-primary uppercase">Rule #3: Mute The Noise</h4>
-                <p class="text-sm mt-1">THE MUTE protocol: Execute in silence. Success needs no audience.</p>
+                <h4 class="text-primary uppercase">III. Absolute Silence</h4>
+                <p class="text-sm mt-1">Mute the external noise. Your only competition is yesterday's version of you.</p>
+            </div>
+        </section>
+
+        <!-- NEW PROFILE VIEW -->
+        <section id="view-profile" class="app-view hidden">
+            <h2 class="text-xl mb-2">My Profile</h2>
+            
+            <div class="card bg-black mb-2">
+                <div class="flex-between mb-2">
+                    <div>
+                        <h3 id="profile-name" class="text-xl fw-bold">User</h3>
+                        <p id="profile-username" class="text-sm opacity-50">@username</p>
+                        <p id="profile-email" class="text-sm opacity-50">email@example.com</p>
+                    </div>
+                    <div style="text-align: center; font-size: 3rem; color: var(--primary-color);">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
             </div>
 
-            <div class="card bg-black text-center mt-2 p-1" style="border: 1px dashed var(--primary-color);">
-                <p class="text-sm italic">"Stop when you're done. Not when you're tired."</p>
+            <div class="grid mb-2">
+                <div class="card bg-dark">
+                    <span class="text-sm uppercase opacity-50">Total Distance</span>
+                    <p class="text-md text-primary fw-bold" id="stat-distance">0 KM</p>
+                </div>
+                <div class="card bg-dark">
+                    <span class="text-sm uppercase opacity-50">Total Activities</span>
+                    <p class="text-md text-primary fw-bold" id="stat-activities">0</p>
+                </div>
+            </div>
+
+            <div class="grid mb-2">
+                <div class="card bg-dark">
+                    <span class="text-sm uppercase opacity-50">Total Duration</span>
+                    <p class="text-md text-primary fw-bold" id="stat-duration">0h 0m</p>
+                </div>
+                <div class="card bg-dark">
+                    <span class="text-sm uppercase opacity-50">Avg Pace</span>
+                    <p class="text-md text-primary fw-bold" id="stat-pace">--:--</p>
+                </div>
+            </div>
+
+            <div class="card bg-dark">
+                <h3 class="text-md uppercase text-primary mb-2">Sport Breakdown</h3>
+                <div id="sport-breakdown" style="font-size: 0.9rem;">
+                    <p class="opacity-50">No activities yet</p>
+                </div>
+            </div>
+
+            <div class="card bg-black">
+                <h3 class="text-md uppercase text-primary mb-2">All Activities</h3>
+                <div id="profile-all-activities" style="font-size: 0.9rem;">
+                    <p class="opacity-50">No activities recorded</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOCIAL FEED VIEW -->
+        <section id="view-feed" class="app-view hidden">
+            <h2 class="text-xl mb-2">Social Feed</h2>
+            
+            <div class="card bg-dark mb-2">
+                <input type="text" id="search-users" placeholder="Search users..." style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white;" />
+            </div>
+
+            <div id="feed-content">
+                <div class="card bg-black text-center">
+                    <p class="text-sm opacity-50">Add friends to see their activities here!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- FRIENDS VIEW -->
+        <section id="view-friends" class="app-view hidden">
+            <h2 class="text-xl mb-2">My Friends</h2>
+            
+            <div class="card bg-dark mb-2">
+                <input type="text" id="friend-search" placeholder="Search & add friends..." style="width: 100%; padding: 12px; background: #111; border: 1px solid #333; border-radius: 8px; color: white;" />
+                <div id="search-results" style="margin-top: 10px; display: none;"></div>
+            </div>
+
+            <div id="friends-list" class="card bg-black">
+                <h3 class="text-md text-primary uppercase mb-2">Friends List</h3>
+                <div id="friends-content">
+                    <p class="text-sm opacity-50 text-center">No friends yet. Search to add some!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MESSAGES VIEW -->
+        <section id="view-messages" class="app-view hidden">
+            <div class="flex-between mb-2">
+                <h2 class="text-xl">Messages</h2>
+                <button onclick="refreshMessages()" class="text-xs" style="background: none; border: none; color: var(--primary-color); cursor: pointer;">⟳</button>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; height: 70vh;">
+                <!-- Conversations List -->
+                <div class="card bg-dark" style="overflow-y: auto; max-height: 100%;">
+                    <h3 class="text-md uppercase text-primary mb-2">Conversations</h3>
+                    <div id="conversations-list">
+                        <p class="text-xs opacity-50">No messages yet</p>
+                    </div>
+                </div>
+
+                <!-- Chat View -->
+                <div class="card bg-black" style="display: flex; flex-direction: column; overflow: hidden;">
+                    <div id="chat-header" class="text-md fw-bold text-primary" style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #333;">
+                        Select a conversation
+                    </div>
+                    <div id="chat-messages" style="flex: 1; overflow-y: auto; margin-bottom: 10px;">
+                        <p class="text-sm opacity-50 text-center">No conversation selected</p>
+                    </div>
+                    <div id="chat-input-area" style="display: none;">
+                        <div style="display: flex; gap: 8px;">
+                            <input type="text" id="message-input" placeholder="Type message..." style="flex: 1; padding: 10px; background: #111; border: 1px solid #333; border-radius: 8px; color: white;" />
+                            <button onclick="sendMessage()" class="btn-diagnostic" style="padding: 10px 15px;">Send</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -149,23 +380,32 @@
 
     <nav class="bottom-nav">
         <div class="nav-item" onclick="showView('dashboard')">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
+            <i class="fas fa-shield-alt"></i>
+            <span>Base</span>
+        </div>
+        <div class="nav-item" onclick="showView('feed')">
+            <i class="fas fa-globe"></i>
+            <span>Feed</span>
         </div>
         <div class="nav-item" onclick="showView('train')">
-            <i class="fas fa-dumbbell"></i>
-            <span>Lab</span>
+            <i class="fas fa-running"></i>
+            <span>Track</span>
         </div>
-        <div class="nav-item" onclick="showView('vault')">
-            <i class="fas fa-bolt"></i>
-            <span>Vault</span>
+        <div class="nav-item" onclick="showView('friends')">
+            <i class="fas fa-users"></i>
+            <span>Friends</span>
         </div>
-        <div class="nav-item" onclick="showView('philosophy')">
-            <i class="fas fa-book"></i>
-            <span>Rule</span>
+        <div class="nav-item" onclick="showView('messages')">
+            <i class="fas fa-comments"></i>
+            <span>Messages</span>
+        </div>
+        <div class="nav-item" onclick="showView('profile')">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
         </div>
     </nav>
 
+    <script src="js/api.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
