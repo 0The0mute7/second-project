@@ -3,19 +3,19 @@
 // Handles all communication with backend
 // ==========================================
 
-// Fallback to localhost, but allow production URL configuration
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const isLocalHost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const configuredApiUrl = window.APP_CONFIG && typeof window.APP_CONFIG.API_URL === 'string'
+    ? window.APP_CONFIG.API_URL.trim()
+    : '';
+
+const API_URL = isLocalHost
     ? 'http://localhost:5000/api'
-    : 'https://your-production-api-url.com/api';
+    : configuredApiUrl;
 
 class APIClient {
     constructor() {
         this.token = localStorage.getItem('auth_token');
     }
-
-    // ==========================================
-    // AUTH ENDPOINTS
-    // ==========================================
 
     async register(username, email, password, name) {
         try {
@@ -25,7 +25,7 @@ class APIClient {
                 body: JSON.stringify({ username, email, password, name })
             });
             const data = await response.json();
-            
+
             if (response.ok) {
                 localStorage.setItem('auth_token', data.token);
                 this.token = data.token;
@@ -44,7 +44,7 @@ class APIClient {
                 body: JSON.stringify({ username, password })
             });
             const data = await response.json();
-            
+
             if (response.ok) {
                 localStorage.setItem('auth_token', data.token);
                 this.token = data.token;
@@ -59,10 +59,6 @@ class APIClient {
         localStorage.removeItem('auth_token');
         this.token = null;
     }
-
-    // ==========================================
-    // USER ENDPOINTS
-    // ==========================================
 
     async getProfile() {
         return this.request('GET', '/users/profile');
@@ -79,10 +75,6 @@ class APIClient {
     async updateProfile(name, bio, profilePicture) {
         return this.request('PUT', '/users/profile', { name, bio, profilePicture });
     }
-
-    // ==========================================
-    // ACTIVITY ENDPOINTS
-    // ==========================================
 
     async createActivity(activity) {
         return this.request('POST', '/activities', activity);
@@ -108,10 +100,6 @@ class APIClient {
         return this.request('POST', `/activities/${id}/like`);
     }
 
-    // ==========================================
-    // FRIEND ENDPOINTS
-    // ==========================================
-
     async addFriend(username) {
         return this.request('POST', `/friends/add/${username}`);
     }
@@ -127,10 +115,6 @@ class APIClient {
     async getSocialFeed(limit = 50, skip = 0) {
         return this.request('GET', `/friends/feed/all?limit=${limit}&skip=${skip}`);
     }
-
-    // ==========================================
-    // MESSAGE ENDPOINTS
-    // ==========================================
 
     async sendMessage(to, text) {
         return this.request('POST', '/messages/send', { to, text });
@@ -148,12 +132,12 @@ class APIClient {
         return this.request('DELETE', `/messages/${id}`);
     }
 
-    // ==========================================
-    // HELPER METHODS
-    // ==========================================
-
     async request(method, endpoint, body = null) {
         try {
+            if (!API_URL || API_URL.includes('YOUR-RENDER-SERVICE')) {
+                throw new Error('Production API URL is not configured yet. Deploy the backend and update js/config.js.');
+            }
+
             const options = {
                 method,
                 headers: {
@@ -177,10 +161,10 @@ class APIClient {
                 window.location.reload();
             }
 
-            return { 
-                success: response.ok, 
+            return {
+                success: response.ok,
                 status: response.status,
-                ...data 
+                ...data
             };
         } catch (err) {
             console.error(`API Error [${method} ${endpoint}]:`, err);
@@ -197,5 +181,4 @@ class APIClient {
     }
 }
 
-// Create global instance
 const api = new APIClient();
